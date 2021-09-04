@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Fragment Counter</string>
+    <string name="create_new_notification">Create new notification</string>
+    <string name="default_counter">1</string>
+</resources>

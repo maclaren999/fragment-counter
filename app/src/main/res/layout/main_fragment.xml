@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.MainFragment">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonCreateNotification"
+        android:layout_width="@dimen/crate_notification_button_size"
+        android:layout_height="@dimen/crate_notification_button_size"
+        android:background="@drawable/large_button_background"
+        android:elevation="6dp"
+        android:text="@string/create_new_notification"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <TextView
+        android:id="@+id/textViewCounter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_32"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/counter_background"
+        android:paddingVertical="@dimen/spacing_8"
+        android:text="@string/default_counter"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textColor="?attr/colorOnPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonMinus"
+        style="@style/Button"
+        android:layout_width="@dimen/counter_buttons_size"
+        android:layout_height="@dimen/counter_buttons_size"
+        android:background="@drawable/counter_buttons_background"
+        android:drawableBottom="@drawable/ic_baseline_remove_32"
+        android:elevation="8dp"
+        android:padding="13dp"
+        android:textColor="@color/black"
+        app:cornerRadius="48dp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewCounter"
+        app:layout_constraintStart_toStartOf="@id/textViewCounter"
+        app:layout_constraintTop_toTopOf="@id/textViewCounter" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonPlus"
+        style="@style/Button"
+        android:layout_width="@dimen/counter_buttons_size"
+        android:layout_height="@dimen/counter_buttons_size"
+        android:background="@drawable/counter_buttons_background"
+        android:drawableBottom="@drawable/ic_baseline_add_24"
+        android:elevation="8dp"
+        android:padding="13dp"
+        android:textColor="@color/black"
+        app:cornerRadius="48dp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewCounter"
+        app:layout_constraintEnd_toEndOf="@id/textViewCounter"
+        app:layout_constraintTop_toTopOf="@id/textViewCounter" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
