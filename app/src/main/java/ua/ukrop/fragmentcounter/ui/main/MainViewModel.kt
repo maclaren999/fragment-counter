@@ -12,16 +12,12 @@ class MainViewModel : ViewModel() {
 
     fun addNewItem() {
         val size = _fragmentCounter.value!!.size
-//        _fragmentCounter.value!!.add(size + 1)
         _fragmentCounter.postValue(_fragmentCounter.value!!.plus(size + 1))
-//        val current = _fragmentCounter.postValue(_fragmentCounter.value?.plus(1))
-//        _fragmentCounter.value = current?.plus(1)
+
     }
 
     fun removeLastItem() {
         _fragmentCounter.postValue(_fragmentCounter.value!!.dropLast(1))
-//        val current = _fragmentCounter.value
-//        if (current != null && current > 1) _fragmentCounter.postValue(current.minus(1))
     }
 
     fun size(): Int = fragmentCounter.value!!.size
