@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
 import ua.ukrop.fragmentcounter.ui.main.MainViewModel
 import ua.ukrop.fragmentcounter.ui.main.PagesFragmentStateAdapter
 
 private const val KEY_ITEM_TEXT = "androidx.viewpager2.integration.testapp.KEY_ITEM_TEXT"
 private const val KEY_CLICK_COUNT = "androidx.viewpager2.integration.testapp.KEY_CLICK_COUNT"
-private const val FLAG_USE_DIFFUTIL = false
 private const val TAG = "TAG_CounterActivity"
 private const val TAG2 = "TAG_callbacks"
 
@@ -26,28 +26,28 @@ class CounterActivity : FragmentActivity() {
         viewPager = findViewById(R.id.pager)
         viewPager.adapter = PagesFragmentStateAdapter(this)
 
+        setObserver()
+    }
+
+    private fun FragmentActivity.setObserver(){
         var oldListSize = 1
         itemsViewModel.pagesLiveData.observe(this) { newPagesList ->
             PagesFragmentStateAdapter.updateList(newPagesList)
             Log.d(TAG, "observe(this){it = ${newPagesList.toString()}}")
-            if (FLAG_USE_DIFFUTIL) {
-
-            } else {
-                when {
-                    newPagesList.size > oldListSize -> {
-                        oldListSize = newPagesList.size
-                        viewPager.adapter?.notifyItemInserted(newPagesList.size - 1)
-                    }
-                    newPagesList.size < oldListSize -> {
-                        oldListSize = newPagesList.size
-                        viewPager.adapter?.notifyItemRemoved(newPagesList.size)
-                    }
-                    newPagesList.size == oldListSize -> {
-                        Log.d(TAG, "Observer triggered but pagesList.size didn't changed")
-                    }
+            when {
+                newPagesList.size > oldListSize -> {
+                    oldListSize = newPagesList.size
+                    viewPager.adapter?.notifyItemInserted(newPagesList.size - 1)
+                    viewPager.setCurrentItem(newPagesList.size - 1, true)
+                }
+                newPagesList.size < oldListSize -> {
+                    oldListSize = newPagesList.size
+                    viewPager.adapter?.notifyItemRemoved(newPagesList.size)
+                }
+                newPagesList.size == oldListSize -> {
+                    Log.d(TAG, "Observer triggered but pagesList.size didn't changed")
                 }
             }
         }
-
     }
 }
