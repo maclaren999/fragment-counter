@@ -12,14 +12,13 @@ import ua.ukrop.fragmentcounter.databinding.MainFragmentBinding
 private const val KEY_FRAGMENT_NUMBER = "KEY_FRAGMENT_NUMBER"
 private const val TAG = "TAG_MainFragment"
 
-class MainFragment(val number: Int) : Fragment() {
+class MainFragment(number: Int?) : Fragment() {
+    val number = number ?: 0
+        .also { Log.e(TAG, "Receiving NULL in MainFragment constructor!") }
 
     companion object {
-        fun newInstance(number: Int) = MainFragment(number).apply {
+        fun newInstance(number: Int?) = MainFragment(number).also {
             Log.d(TAG, "newInstance(number = $number)")
-//            arguments = Bundle(1).apply {
-//                putInt(KEY_FRAGMENT_NUMBER, number)
-//            }
         }
     }
 
@@ -44,7 +43,8 @@ class MainFragment(val number: Int) : Fragment() {
             itemsViewModel.addNewItem()
         }
         itemsViewModel.pagesLiveData.observe(requireActivity()) { fragmentList ->
-            if (isFirstFragment() && fragmentList.size <= 1) binding.buttonMinus.visibility = View.GONE
+            if (isFirstFragment() && fragmentList.size <= 1)
+                binding.buttonMinus.visibility = View.GONE
             else binding.buttonMinus.visibility = View.VISIBLE
         }
     }

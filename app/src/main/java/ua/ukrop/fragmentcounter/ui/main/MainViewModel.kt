@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    private var _pagesList = listOf<Int>()
+    private var _pagesList = listOf<Int>(1)
     private val _pagesLiveData: MutableLiveData<List<Int>> = MutableLiveData<List<Int>>(_pagesList)
     val pagesLiveData: LiveData<List<Int>> = _pagesLiveData
 

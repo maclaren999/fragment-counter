@@ -13,6 +13,7 @@ import ua.ukrop.fragmentcounter.ui.main.MainViewModel
 
 private const val KEY_ITEM_TEXT = "androidx.viewpager2.integration.testapp.KEY_ITEM_TEXT"
 private const val KEY_CLICK_COUNT = "androidx.viewpager2.integration.testapp.KEY_CLICK_COUNT"
+private const val FLAG_USE_DIFFUTIL = false
 private const val TAG = "TAG_CounterActivity"
 private const val TAG2 = "TAG_callbacks"
 
@@ -27,19 +28,35 @@ class CounterActivity : FragmentActivity() {
         viewPager = findViewById(R.id.pager)
         viewPager.adapter = createViewPagerAdapter()
 
-        itemsViewModel.pagesLiveData.observe(this) {
-            Log.d(TAG, "observe(this){it = ${it.toString()}}")
-            viewPager.adapter!!.notifyDataSetChanged()
+        var oldListSize = 1
+        itemsViewModel.pagesLiveData.observe(this) { pagesList ->
+            Log.d(TAG, "observe(this){it = ${pagesList.toString()}}")
+            if (FLAG_USE_DIFFUTIL) {
+
+            } else {
+                when {
+                    pagesList.size > oldListSize -> {
+                        oldListSize = pagesList.size
+                        viewPager.adapter?.notifyItemInserted(pagesList.size - 1)
+                    }
+                    pagesList.size < oldListSize -> {
+                        oldListSize = pagesList.size
+                        viewPager.adapter?.notifyItemRemoved(pagesList.size)
+                    }
+                    pagesList.size == oldListSize -> {
+                        Log.d(TAG, "Observer triggered but pagesList.size didn't changed")
+                    }
+                }
+            }
         }
     }
 
     fun createViewPagerAdapter(): RecyclerView.Adapter<*> {
-        val items = itemsViewModel.pagesLiveData.value // avoids resolving the ViewModel multiple times
 
         return object : FragmentStateAdapter(this) {
             override fun createFragment(position: Int): MainFragment {
                 Log.d(TAG, "createFragment(position = $position)")
-                return MainFragment.newInstance(position + 1)
+                return MainFragment.newInstance(itemsViewModel.pagesLiveData.value?.get(position))
             }
 
             override fun onBindViewHolder(
@@ -52,10 +69,19 @@ class CounterActivity : FragmentActivity() {
             }
 
             override fun getItemCount(): Int =
-                itemsViewModel.pagesLiveData.value?.size.also { Log.d(TAG2, "getItemCount() = $it") } ?: 3
+                itemsViewModel.pagesLiveData.value?.size.also {
+                    Log.d(
+                        TAG2,
+                        "getItemCount() = $it"
+                    )
+                } ?: 3
 
-            override fun getItemId(position: Int): Long = position + 1L.also { Log.d(TAG2, "getItemId() = $it") }
-            override fun containsItem(itemId: Long): Boolean = itemsViewModel.pagesLiveData.value!!.contains(itemId.toInt()).also { Log.d(TAG2, "containsItem() = $it") }
+            override fun getItemId(position: Int): Long =
+                position + 1L.also { Log.d(TAG2, "getItemId() = $it") }
+
+            override fun containsItem(itemId: Long): Boolean =
+                itemsViewModel.pagesLiveData.value!!.contains(itemId.toInt())
+                    .also { Log.d(TAG2, "containsItem() = $it") }
         }
     }
 }
