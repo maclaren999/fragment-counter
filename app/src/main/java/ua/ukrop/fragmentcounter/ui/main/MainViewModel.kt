@@ -14,22 +14,29 @@ class MainViewModel(private val state: SavedStateHandle) : ViewModel() {
     }
 
     private var _pagesList: List<Int>
+        get() {
+            return state.get<List<Int>>(KEY_PAGES_LIST) ?: listOf<Int>(1)
+        }
+        set(value) {
+            state.set(KEY_PAGES_LIST, value)
+        }
     private val _pagesLiveData: MutableLiveData<List<Int>>
-    init {
-        _pagesList= (state.get<IntArray>(KEY_PAGES_LIST) ?: intArrayOf(1)).toList()
-        _pagesLiveData= state.getLiveData(KEY_MUTABLE_LIVEDATA, _pagesList)//MutableLiveData<List<Int>>(_pagesList)
+        get() {
+            return state.getLiveData(KEY_MUTABLE_LIVEDATA)
+        }
 
-        Log.d("TAG3", state.get(KEY_PAGES_LIST) ?: "null")
-        Log.d("TAG3", state.getLiveData<List<Int>>(KEY_MUTABLE_LIVEDATA).value.toString())
-    }
+//    init {
+//        _pagesList = (state.get<IntArray>(KEY_PAGES_LIST) ?: intArrayOf(1)).toList()
+//        _pagesLiveData = state.getLiveData(
+//            KEY_MUTABLE_LIVEDATA,
+//            _pagesList
+//        )//MutableLiveData<List<Int>>(_pagesList)
+//
+//        Log.d("TAG3", state.get(KEY_PAGES_LIST) ?: "null")
+//        Log.d("TAG3", state.getLiveData<List<Int>>(KEY_MUTABLE_LIVEDATA).value.toString())
+//    }
 
-//        set(value) {
-//            field = value
-//            state.set(KEY_PAGES_LIST, value)
-//        }
-//        get() {
-//            return state.get<List<Int>>(KEY_PAGES_LIST) ?: listOf<Int>(1)
-//        }
+
 //            init {
 //        state.setSavedStateProvider("KEY_PROVIDER") {
 //            bundleOf(
@@ -53,17 +60,18 @@ class MainViewModel(private val state: SavedStateHandle) : ViewModel() {
     fun addNewItem() {
         _pagesList = _pagesList.plus(_pagesList.size + 1)
         _pagesLiveData.postValue(_pagesList)
-        saveState()
+//        saveState()
     }
 
     fun removeLastItem() {
         _pagesList = _pagesList.dropLast(1)
         _pagesLiveData.postValue(_pagesList)
-        saveState()
+//        saveState()
     }
 
-    private fun saveState() {
-        state.set(KEY_PAGES_LIST, _pagesList.toIntArray()).also { Log.d("TAG3", _pagesList.toString()) }
-        state.set(KEY_MUTABLE_LIVEDATA, _pagesList)
-    }
+//    private fun saveState() {
+//        state.set(KEY_PAGES_LIST, _pagesList.toIntArray())
+//            .also { Log.d("TAG3", _pagesList.toString()) }
+//        state.set(KEY_MUTABLE_LIVEDATA, _pagesList)
+//    }
 }
