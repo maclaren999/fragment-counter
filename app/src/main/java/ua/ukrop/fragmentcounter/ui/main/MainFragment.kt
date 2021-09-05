@@ -35,14 +35,19 @@ class MainFragment(val number: Int) : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.textViewCounter.text = number.toString()//savedInstanceState?.getInt(KEY_FRAGMENT_NUMBER).toString()
-        binding.buttonMinus.setOnClickListener{
+        binding.textViewCounter.text =
+            number.toString()//savedInstanceState?.getInt(KEY_FRAGMENT_NUMBER).toString()
+        binding.buttonMinus.setOnClickListener {
             itemsViewModel.removeLastItem()
-
         }
-        binding.buttonPlus.setOnClickListener{
+        binding.buttonPlus.setOnClickListener {
             itemsViewModel.addNewItem()
+        }
+        itemsViewModel.fragmentCounter.observe(requireActivity()) { fragmentList ->
+            if (isFirstFragment() && fragmentList.size <= 1) binding.buttonMinus.visibility = View.GONE
+            else binding.buttonMinus.visibility = View.VISIBLE
         }
     }
 
+    fun isFirstFragment(): Boolean = number == 1
 }

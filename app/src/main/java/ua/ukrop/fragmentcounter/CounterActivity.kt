@@ -46,9 +46,8 @@ class CounterActivity : FragmentActivity() {
             }
 
             override fun getItemCount(): Int = items!!.size
-//            override fun getItemId(position: Int): Long = items.itemId(position)
-//            override fun containsItem(itemId: Long): Boolean = items.contains(itemId)
+//            override fun getItemId(position: Int): Long = position+1L
+//            override fun containsItem(itemId: Long): Boolean = items!!.contains(itemId.toInt())
         }
     }
-
 }
