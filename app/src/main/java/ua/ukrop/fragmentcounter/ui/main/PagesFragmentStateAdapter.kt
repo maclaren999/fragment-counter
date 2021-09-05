@@ -7,20 +7,13 @@ import androidx.viewpager2.adapter.FragmentViewHolder
 
 const val TAG2 = "TAG_callbacks"
 
-class PagesFragmentStateAdapter private constructor(activity: FragmentActivity) :
+class PagesFragmentStateAdapter(activity: FragmentActivity) :
     FragmentStateAdapter(activity) {
-    companion object {
-        private var INSTANCE: PagesFragmentStateAdapter? = null
-        operator fun invoke(activity: FragmentActivity): PagesFragmentStateAdapter {
-            if (INSTANCE == null) {
-                INSTANCE = PagesFragmentStateAdapter(activity)
-            }
-            return INSTANCE as PagesFragmentStateAdapter
-        }
-        private var localPagesList: List<Int> = listOf()
-        fun updateList(newlist: List<Int>) {
-            localPagesList = newlist
-        }
+
+    private var localPagesList: List<Int> = mutableListOf()
+    fun updateList(newlist: List<Int>) {
+        localPagesList = newlist
+
     }
 
     override fun createFragment(position: Int): MainFragment {

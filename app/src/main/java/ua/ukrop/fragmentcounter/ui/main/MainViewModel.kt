@@ -8,70 +8,41 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
 class MainViewModel(private val state: SavedStateHandle) : ViewModel() {
-    companion object {
-        const val KEY_MUTABLE_LIVEDATA = "KEY_MUTABLE_LIVEDATA"
-        const val KEY_PAGES_LIST = "KEY_PAGES_LIST"
-    }
 
     private var _pagesList: List<Int>
         get() {
-            return state.get<List<Int>>(KEY_PAGES_LIST) ?: listOf<Int>(1)
+            return (state.get<IntArray>(KEY_PAGES_LIST) ?: intArrayOf(1)).toList()
         }
         set(value) {
-            state.set(KEY_PAGES_LIST, value)
-        }
-    private val _pagesLiveData: MutableLiveData<List<Int>>
-        get() {
-            return state.getLiveData(KEY_MUTABLE_LIVEDATA)
+            state[KEY_PAGES_LIST] = value.toIntArray()
         }
 
-//    init {
-//        _pagesList = (state.get<IntArray>(KEY_PAGES_LIST) ?: intArrayOf(1)).toList()
-//        _pagesLiveData = state.getLiveData(
-//            KEY_MUTABLE_LIVEDATA,
-//            _pagesList
-//        )//MutableLiveData<List<Int>>(_pagesList)
-//
-//        Log.d("TAG3", state.get(KEY_PAGES_LIST) ?: "null")
-//        Log.d("TAG3", state.getLiveData<List<Int>>(KEY_MUTABLE_LIVEDATA).value.toString())
-//    }
-
-
-//            init {
-//        state.setSavedStateProvider("KEY_PROVIDER") {
-//            bundleOf(
-//                Pair(KEY_MUTABLE_LIVEDATA, _pagesLiveData),
-//                Pair(KEY_PAGES_LIST, _pagesList)
-//            )
-//        }
-//            }
-
-//    fun getName(): LiveData<String?>? {
-//        return mState.getLiveData(NAME_KEY)
-//    }
-//
-//    fun saveNewName(newName: String?) {
-//        mState.set(NAME_KEY, newName)
-//    }
-
-
+    private val _pagesLiveData: MutableLiveData<List<Int>> = MutableLiveData()
     val pagesLiveData: LiveData<List<Int>> = _pagesLiveData
+
+    init {
+        populate()
+        Log.d("TAG4", "_pagesList = $_pagesList")
+    }
 
     fun addNewItem() {
         _pagesList = _pagesList.plus(_pagesList.size + 1)
-        _pagesLiveData.postValue(_pagesList)
-//        saveState()
+        populate()
     }
 
     fun removeLastItem() {
         _pagesList = _pagesList.dropLast(1)
-        _pagesLiveData.postValue(_pagesList)
-//        saveState()
+        populate()
     }
 
-//    private fun saveState() {
-//        state.set(KEY_PAGES_LIST, _pagesList.toIntArray())
-//            .also { Log.d("TAG3", _pagesList.toString()) }
-//        state.set(KEY_MUTABLE_LIVEDATA, _pagesList)
-//    }
+    private fun populate() {
+        _pagesLiveData.postValue(_pagesList)
+    }
+
+    private fun saveState() {
+    }
+
+    companion object {
+        const val KEY_PAGES_LIST = "KEY_PAGES_LIST"
+    }
 }

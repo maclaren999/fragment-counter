@@ -18,22 +18,18 @@ class CounterActivity : FragmentActivity() {
     private lateinit var viewPager: ViewPager2
     private val itemsViewModel: MainViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_counter)
 
         viewPager = findViewById(R.id.pager)
-        viewPager.adapter = PagesFragmentStateAdapter(this)
+        if (viewPager.adapter == null) {
+            viewPager.adapter = PagesFragmentStateAdapter(this)
+        }
 
-        setObserver()
-    }
-
-    private fun FragmentActivity.setObserver(){
         var oldListSize = 1
         itemsViewModel.pagesLiveData.observe(this) { newPagesList ->
-            PagesFragmentStateAdapter.updateList(newPagesList)
-            Log.d(TAG, "observe(this){it = ${newPagesList.toString()}}")
+            (viewPager.adapter as PagesFragmentStateAdapter).updateList(newPagesList)
             when {
                 newPagesList.size > oldListSize -> {
                     oldListSize = newPagesList.size
@@ -45,7 +41,6 @@ class CounterActivity : FragmentActivity() {
                     viewPager.adapter?.notifyItemRemoved(newPagesList.size)
                 }
                 newPagesList.size == oldListSize -> {
-                    Log.d(TAG, "Observer triggered but pagesList.size didn't changed")
                 }
             }
         }

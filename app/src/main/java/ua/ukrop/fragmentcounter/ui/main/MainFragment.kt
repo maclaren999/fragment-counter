@@ -6,19 +6,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import ua.ukrop.fragmentcounter.databinding.MainFragmentBinding
 
 private const val KEY_FRAGMENT_NUMBER = "KEY_FRAGMENT_NUMBER"
 private const val TAG = "TAG_MainFragment"
 
-class MainFragment(number: Int?) : Fragment() {
-    val number = number ?: 0
-        .also { Log.e(TAG, "Receiving NULL in MainFragment constructor!") }
+class MainFragment : Fragment() {
+
+    private val number: Int by lazy { requireArguments().getInt(KEY_NUMBER) }
 
     companion object {
-        fun newInstance(number: Int?) = MainFragment(number).also {
-            Log.d(TAG, "newInstance(number = $number)")
+        private const val KEY_NUMBER = "number"
+
+        fun newInstance(number: Int): MainFragment {
+            return MainFragment().also {
+                it.arguments = bundleOf(KEY_NUMBER to number)
+            }
         }
     }
 
