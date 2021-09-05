@@ -1,28 +1,30 @@
 package ua.ukrop.fragmentcounter.ui.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ua.ukrop.fragmentcounter.R
+import androidx.fragment.app.activityViewModels
 import ua.ukrop.fragmentcounter.databinding.MainFragmentBinding
 
 private const val KEY_FRAGMENT_NUMBER = "KEY_FRAGMENT_NUMBER"
+private const val TAG = "TAG_MainFragment"
 
-class MainFragment : Fragment() {
+class MainFragment(val number: Int) : Fragment() {
 
     companion object {
-        fun newInstance(number: Int) = MainFragment().apply {
-            arguments = Bundle(1).apply {
-                putInt(KEY_FRAGMENT_NUMBER, number)
-            }
+        fun newInstance(number: Int) = MainFragment(number).apply {
+            Log.d(TAG, "newInstance(number = $number)")
+//            arguments = Bundle(1).apply {
+//                putInt(KEY_FRAGMENT_NUMBER, number)
+//            }
         }
     }
 
     private lateinit var binding: MainFragmentBinding
-    private lateinit var viewModel: MainViewModel
+    private val itemsViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,19 +35,14 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.textViewCounter.text = savedInstanceState?.getInt(KEY_FRAGMENT_NUMBER).toString()
+        binding.textViewCounter.text = number.toString()//savedInstanceState?.getInt(KEY_FRAGMENT_NUMBER).toString()
         binding.buttonMinus.setOnClickListener{
-            TODO()
+            itemsViewModel.removeLastItem()
+
         }
         binding.buttonPlus.setOnClickListener{
-            TODO()
+            itemsViewModel.addNewItem()
         }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-    }
-
 
 }
