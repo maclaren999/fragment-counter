@@ -15,7 +15,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun removeLastItem() {
-        _pagesList = _pagesList.plus(_pagesList.size + 1)
+        _pagesList = _pagesList.dropLast(1)
         _pagesLiveData.postValue(_pagesList)
     }
 
