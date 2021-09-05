@@ -5,20 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    private val _fragmentCounter: MutableLiveData<List<Int>> =
-        MutableLiveData<List<Int>>(listOf(1))
-
-    val fragmentCounter: LiveData<List<Int>> = _fragmentCounter
+    private var _pagesList = listOf<Int>()
+    private val _pagesLiveData: MutableLiveData<List<Int>> = MutableLiveData<List<Int>>(_pagesList)
+    val pagesLiveData: LiveData<List<Int>> = _pagesLiveData
 
     fun addNewItem() {
-        val size = _fragmentCounter.value!!.size
-        _fragmentCounter.postValue(_fragmentCounter.value!!.plus(size + 1))
-
+        _pagesList = _pagesList.plus(_pagesList.size + 1)
+        _pagesLiveData.postValue(_pagesList)
     }
 
     fun removeLastItem() {
-        _fragmentCounter.postValue(_fragmentCounter.value!!.dropLast(1))
+        _pagesList = _pagesList.plus(_pagesList.size + 1)
+        _pagesLiveData.postValue(_pagesList)
     }
 
-    fun size(): Int = fragmentCounter.value!!.size
 }

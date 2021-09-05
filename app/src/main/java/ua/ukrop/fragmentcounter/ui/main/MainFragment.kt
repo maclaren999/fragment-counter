@@ -43,7 +43,7 @@ class MainFragment(val number: Int) : Fragment() {
         binding.buttonPlus.setOnClickListener {
             itemsViewModel.addNewItem()
         }
-        itemsViewModel.fragmentCounter.observe(requireActivity()) { fragmentList ->
+        itemsViewModel.pagesLiveData.observe(requireActivity()) { fragmentList ->
             if (isFirstFragment() && fragmentList.size <= 1) binding.buttonMinus.visibility = View.GONE
             else binding.buttonMinus.visibility = View.VISIBLE
         }
