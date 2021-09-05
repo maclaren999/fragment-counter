@@ -21,6 +21,7 @@ class CounterActivity : FragmentActivity() {
     private lateinit var viewPager: ViewPager2
     private val itemsViewModel: MainViewModel by viewModels()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_counter)
@@ -29,59 +30,28 @@ class CounterActivity : FragmentActivity() {
         viewPager.adapter = createViewPagerAdapter()
 
         var oldListSize = 1
-        itemsViewModel.pagesLiveData.observe(this) { pagesList ->
-            Log.d(TAG, "observe(this){it = ${pagesList.toString()}}")
+        itemsViewModel.pagesLiveData.observe(this) { newPagesList ->
+            viewPager.adapter
+            Log.d(TAG, "observe(this){it = ${newPagesList.toString()}}")
             if (FLAG_USE_DIFFUTIL) {
 
             } else {
                 when {
-                    pagesList.size > oldListSize -> {
-                        oldListSize = pagesList.size
-                        viewPager.adapter?.notifyItemInserted(pagesList.size - 1)
+                    newPagesList.size > oldListSize -> {
+                        oldListSize = newPagesList.size
+                        viewPager.adapter?.notifyItemInserted(newPagesList.size - 1)
                     }
-                    pagesList.size < oldListSize -> {
-                        oldListSize = pagesList.size
-                        viewPager.adapter?.notifyItemRemoved(pagesList.size)
+                    newPagesList.size < oldListSize -> {
+                        oldListSize = newPagesList.size
+                        viewPager.adapter?.notifyItemRemoved(newPagesList.size)
                     }
-                    pagesList.size == oldListSize -> {
+                    newPagesList.size == oldListSize -> {
                         Log.d(TAG, "Observer triggered but pagesList.size didn't changed")
                     }
                 }
             }
         }
+
     }
 
-    fun createViewPagerAdapter(): RecyclerView.Adapter<*> {
-
-        return object : FragmentStateAdapter(this) {
-            override fun createFragment(position: Int): MainFragment {
-                Log.d(TAG, "createFragment(position = $position)")
-                return MainFragment.newInstance(itemsViewModel.pagesLiveData.value?.get(position))
-            }
-
-            override fun onBindViewHolder(
-                holder: FragmentViewHolder,
-                position: Int,
-                payloads: MutableList<Any>
-            ) {
-                super.onBindViewHolder(holder, position, payloads)
-                Log.d(TAG2, "onBindViewHolder(position = $position)")
-            }
-
-            override fun getItemCount(): Int =
-                itemsViewModel.pagesLiveData.value?.size.also {
-                    Log.d(
-                        TAG2,
-                        "getItemCount() = $it"
-                    )
-                } ?: 3
-
-            override fun getItemId(position: Int): Long =
-                position + 1L.also { Log.d(TAG2, "getItemId() = $it") }
-
-            override fun containsItem(itemId: Long): Boolean =
-                itemsViewModel.pagesLiveData.value!!.contains(itemId.toInt())
-                    .also { Log.d(TAG2, "containsItem() = $it") }
-        }
-    }
 }
