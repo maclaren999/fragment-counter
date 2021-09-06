@@ -86,7 +86,8 @@ class MainFragment : Fragment() {
             setSmallIcon(R.drawable.ic_baseline_add_24)
             setContentTitle(getString(R.string.content_title))
             setContentText(notificationText())
-            setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            setPriority(NotificationCompat.PRIORITY_HIGH)
+            setVibrate(longArrayOf(0, 250, 250, 250))
             setContentIntent(createPendingIntent())
             setAutoCancel(true)
         }.build()
@@ -110,6 +111,7 @@ class MainFragment : Fragment() {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
+                enableVibration(true)
             }
             notificationManager =
                 getSystemService(
