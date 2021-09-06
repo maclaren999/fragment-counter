@@ -2,4 +2,7 @@
     <string name="app_name">Fragment Counter</string>
     <string name="create_new_notification">Create new notification</string>
     <string name="default_counter">1</string>
+    <string name="channel_desctioption">Channel for fragment button notification</string>
+    <string name="Notification">Notification</string>
+    <string name="content_title">Fragment Counter app</string>
 </resources>

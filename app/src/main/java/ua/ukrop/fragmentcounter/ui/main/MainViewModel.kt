@@ -39,6 +39,10 @@ class MainViewModel(private val state: SavedStateHandle) : ViewModel() {
         _pagesLiveData.postValue(_pagesList)
     }
 
+    fun setList(size: Int){
+        _pagesList = (1 until size+1).toList()
+    }
+
     private fun saveState() {
     }
 
