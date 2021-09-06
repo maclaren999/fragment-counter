@@ -1,16 +1,16 @@
 package ua.ukrop.fragmentcounter
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import ua.ukrop.fragmentcounter.ui.main.KEY_INTENT_COUNT
 import ua.ukrop.fragmentcounter.ui.main.MainViewModel
 import ua.ukrop.fragmentcounter.ui.main.PagesFragmentStateAdapter
 
-private const val KEY_ITEM_TEXT = "androidx.viewpager2.integration.testapp.KEY_ITEM_TEXT"
-private const val KEY_CLICK_COUNT = "androidx.viewpager2.integration.testapp.KEY_CLICK_COUNT"
 private const val TAG = "TAG_CounterActivity"
 private const val TAG2 = "TAG_callbacks"
 
@@ -36,6 +36,12 @@ class CounterActivity : FragmentActivity() {
             viewPager.adapter = PagesFragmentStateAdapter(this)
         }
 
+        val notificationManager =
+            ContextCompat.getSystemService(
+                this,
+                NotificationManager::class.java
+            ) as NotificationManager
+
         var oldListSize = 1
         itemsViewModel.pagesLiveData.observe(this) { newPagesList ->
             (viewPager.adapter as PagesFragmentStateAdapter).updateList(newPagesList)
@@ -48,6 +54,7 @@ class CounterActivity : FragmentActivity() {
                 newPagesList.size < oldListSize -> {
                     oldListSize = newPagesList.size
                     viewPager.adapter?.notifyItemRemoved(newPagesList.size)
+                    notificationManager.cancel(newPagesList.size + 1)
                 }
                 newPagesList.size == oldListSize -> {
                 }

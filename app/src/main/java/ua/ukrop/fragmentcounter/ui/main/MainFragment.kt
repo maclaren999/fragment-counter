@@ -43,7 +43,6 @@ class MainFragment : Fragment() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var binding: MainFragmentBinding
     private val itemsViewModel: MainViewModel by activityViewModels()
-    private var currentNotificationId: Int = number
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,8 +64,7 @@ class MainFragment : Fragment() {
         binding.buttonCreateNotification.setOnClickListener {
             val notification = createNotification()
             with(NotificationManagerCompat.from(requireContext())) {
-                // notificationId is a unique int for each notification that you must define
-                currentNotificationId = number
+                val currentNotificationId = number
                 notify(currentNotificationId, notification)
             }
         }
@@ -121,11 +119,6 @@ class MainFragment : Fragment() {
             notificationManager.createNotificationChannel(channel)
 
         }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        notificationManager.cancel(currentNotificationId)
     }
 
     fun isFirstFragment(): Boolean = number == 1
