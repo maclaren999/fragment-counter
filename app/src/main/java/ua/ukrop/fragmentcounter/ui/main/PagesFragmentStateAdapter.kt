@@ -13,7 +13,6 @@ class PagesFragmentStateAdapter(activity: FragmentActivity) :
     private var localPagesList: List<Int> = mutableListOf()
     fun updateList(newlist: List<Int>) {
         localPagesList = newlist
-
     }
 
     override fun createFragment(position: Int): MainFragment {

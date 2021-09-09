@@ -3,6 +3,7 @@ package ua.ukrop.fragmentcounter
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -20,9 +21,8 @@ class CounterActivity : FragmentActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-
         intent?.let {
-            val count = intent.getIntExtra(KEY_INTENT_COUNT, 1)
+            val count = intent.getIntExtra(KEY_INTENT_COUNT, 1).also { Log.d(TAG, "count = $it") }
             viewPager.openFragmentFromIntent(count, itemsViewModel)
         }
     }
@@ -65,8 +65,7 @@ class CounterActivity : FragmentActivity() {
 
 fun ViewPager2.openFragmentFromIntent(count: Int, itemsViewModel: MainViewModel) {
     val position = count - 1
-    if(this.adapter!!.itemCount < count){
-        itemsViewModel.setList(count)
-    }
-    this.setCurrentItem(position, false)
+    val itemCount = this.adapter!!.itemCount
+    Log.d(TAG, "position = $position; items = $itemCount")
+    this.setCurrentItem(position, true)
 }

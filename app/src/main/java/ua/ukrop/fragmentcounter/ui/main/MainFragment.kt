@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,6 @@ class MainFragment : Fragment() {
 
     private val number: Int by lazy { requireArguments().getInt(KEY_NUMBER) }
 
-
     companion object {
         private const val KEY_NUMBER = "number"
         private const val CHANNEL_ID = "chID"
@@ -40,9 +40,14 @@ class MainFragment : Fragment() {
         }
     }
 
-    private lateinit var notificationManager: NotificationManager
-    private lateinit var binding: MainFragmentBinding
     private val itemsViewModel: MainViewModel by activityViewModels()
+    private lateinit var binding: MainFragmentBinding
+    private val notificationManager: NotificationManager by lazy {
+        getSystemService(
+            requireContext(),
+            NotificationManager::class.java
+        ) as NotificationManager
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,13 +97,27 @@ class MainFragment : Fragment() {
             setAutoCancel(true)
         }.build()
 
-    private fun createPendingIntent(): PendingIntent? {
+    private fun createPendingIntent(): PendingIntent {
         val intent = Intent(requireContext(), CounterActivity::class.java).apply {
             setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(KEY_INTENT_COUNT, number)
         }
         val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getActivity(
+                    requireContext(),
+                    number,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            } else {
+                PendingIntent.getActivity(
+                    requireContext(),
+                    number,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         return pendingIntent
     }
 
@@ -113,13 +132,7 @@ class MainFragment : Fragment() {
                 description = descriptionText
                 enableVibration(true)
             }
-            notificationManager =
-                getSystemService(
-                    requireContext(),
-                    NotificationManager::class.java
-                ) as NotificationManager
             notificationManager.createNotificationChannel(channel)
-
         }
     }
 
